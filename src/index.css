@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Montserrat', sans-serif;
+
+  --color-purple: #813a88;
+  --color-purple-light: #9b4fa3;
+  --color-purple-dark: #6a2f71;
+  --color-purple-soft: rgba(129, 58, 136, 0.08);
+
+  --color-teal: #4f9f96;
+  --color-teal-light: #62b3a9;
+  --color-teal-dark: #3d8279;
+  --color-teal-soft: rgba(79, 159, 150, 0.08);
+
+  --color-mint: #b0f1e9;
+  --color-mint-light: #d4f7f2;
+  --color-mint-pale: #edfcf9;
+
+  --color-chart-home: #4a90d9;
+  --color-chart-school: #d94a5c;
+  --color-chart-social: #4ab87a;
+  --color-chart-alone: #d9b84a;
+
+  --shadow-card-sm: 0 2px 8px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
+  --shadow-card-md: 0 4px 20px rgba(79,159,150,0.08), 0 2px 8px rgba(0,0,0,0.03);
+  --shadow-card-lg: 0 8px 40px rgba(79,159,150,0.10), 0 4px 16px rgba(0,0,0,0.03);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+body {
+  margin: 0;
+  background: var(--color-mint-pale);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
