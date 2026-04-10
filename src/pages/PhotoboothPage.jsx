@@ -538,13 +538,13 @@ export default function PhotoboothPage() {
               <p className="text-xs text-gray-400 mb-3">{T(t.photobooth.igTagLabel, lang)}</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                 <a
-                  href="https://instagram.com/psikologi.telu"
+                  href="https://instagram.com/psychology.telu"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-full bg-purple/10 px-4 py-2 text-sm font-semibold text-purple hover:bg-purple/20 transition-colors no-underline"
                 >
                   <IgIcon className="w-4 h-4" />
-                  @psikologi.telu
+                  @psychology.telu
                 </a>
                 <a
                   href="https://instagram.com/komunitaspsychologytel_u"

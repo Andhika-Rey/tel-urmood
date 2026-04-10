@@ -173,10 +173,10 @@ const t = {
 
   // ─── Chart axis labels ───
   chart: {
-    comfortPlus: { en: 'Comfort +', id: 'Kenyamanan +' },
-    energyPlus: { en: 'Energy +', id: 'Energi +' },
-    comfort: { en: 'Comfort', id: 'Kenyamanan' },
-    energy: { en: 'Energy', id: 'Energi' },
+    comfortPlus: { en: 'Valence +', id: 'Valensi +' },
+    energyPlus: { en: 'Arousal +', id: 'Arousal +' },
+    comfort: { en: 'Valence', id: 'Valensi' },
+    energy: { en: 'Arousal', id: 'Arousal' },
   },
 
   // ─── Scale labels ───

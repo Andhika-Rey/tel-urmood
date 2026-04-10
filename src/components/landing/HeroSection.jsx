@@ -8,7 +8,7 @@ export default function HeroSection({ onStartTest }) {
   const contextLabels = [
     { key: 'home', Icon: Home, style: 'bg-purple-soft', iconStyle: 'text-purple', pos: 'absolute -top-2 right-4 md:right-0' },
     { key: 'school', Icon: GraduationCap, style: 'bg-purple-soft', iconStyle: 'text-purple', pos: 'absolute top-1/2 -translate-y-1/2 -left-4 md:-left-8' },
-    { key: 'social', Icon: Users, style: 'bg-teal-soft', iconStyle: 'text-teal', pos: 'absolute -bottom-1 left-4 md:left-2' },
+    { key: 'social', Icon: Users, style: 'bg-teal-soft', iconStyle: 'text-teal', pos: 'absolute -bottom-1 -left-4 md:-left-6' },
     { key: 'alone', Icon: User, style: 'bg-teal-soft', iconStyle: 'text-teal', pos: 'absolute -bottom-1 right-4 md:right-2' },
   ];
 
@@ -111,8 +111,12 @@ export default function HeroSection({ onStartTest }) {
           </div>
 
           {/* Floating context badges */}
-          {contextLabels.map(({ key, Icon, style, iconStyle, pos }) => (
-            <div key={key} className={`${pos} bg-white/90 backdrop-blur rounded-2xl shadow-card-md border border-white/60 px-3.5 py-2.5 flex items-center gap-2`}>
+          {contextLabels.map(({ key, Icon, style, iconStyle, pos }, i) => (
+            <div
+              key={key}
+              className={`${pos} bg-white/90 backdrop-blur rounded-2xl shadow-card-md border border-white/60 px-3.5 py-2.5 flex items-center gap-2 animate-float`}
+              style={{ animationDelay: `${i * 0.7}s` }}
+            >
               <div className={`w-7 h-7 rounded-lg ${style} flex items-center justify-center`}>
                 <Icon className={`w-3.5 h-3.5 ${iconStyle}`} />
               </div>
