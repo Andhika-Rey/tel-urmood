@@ -2,7 +2,9 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import { CONTEXTS, QUESTIONS, CONTEXT_INSTRUCTIONS } from '../constants/design';
+import { CONTEXTS, QUESTIONS } from '../constants/design';
+import { useLang } from '../contexts/LanguageContext';
+import t, { T } from '../constants/translations';
 import ProgressBar from '../components/test/ProgressBar';
 import LikertScale from '../components/test/LikertScale';
 
@@ -17,6 +19,7 @@ const variants = {
 
 export default function TestFlowPage({ answers, setAnswers }) {
   const navigate = useNavigate();
+  const { lang } = useLang();
   const [step, setStep] = useState(0);
   const dirRef = useRef(1);
 
@@ -108,9 +111,9 @@ export default function TestFlowPage({ answers, setAnswers }) {
                   <Icon className="w-5 h-5 text-purple" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-gray-900">{context.label}</h2>
+                  <h2 className="text-base font-bold text-gray-900">{T(t.contexts[contextKey], lang)}</h2>
                   <p className="text-[11px] text-gray-400">
-                    {CONTEXT_INSTRUCTIONS[contextKey]}
+                    {T(t.test.contextInstructions[contextKey], lang)}
                   </p>
                 </div>
               </div>
@@ -120,7 +123,7 @@ export default function TestFlowPage({ answers, setAnswers }) {
                 <div className="flex items-start gap-2.5 bg-teal-soft rounded-2xl px-5 py-3.5 mb-8 border border-teal/10">
                   <Sparkles className="w-4 h-4 text-teal mt-0.5 shrink-0" />
                   <p className="text-xs text-teal-dark leading-relaxed">
-                    There are no right or wrong answers. Just pick what feels closest to your experience.
+                    {T(t.test.helperTip, lang)}
                   </p>
                 </div>
               )}
@@ -129,14 +132,14 @@ export default function TestFlowPage({ answers, setAnswers }) {
               {isContextStart && step > 0 && (
                 <div className="text-center mb-6">
                   <span className="inline-block text-[11px] font-medium text-teal bg-teal-soft rounded-full px-4 py-1.5 border border-teal/10">
-                    Now entering: {context.label}
+                    {T(t.test.nowEntering, lang)} {T(t.contexts[contextKey], lang)}
                   </span>
                 </div>
               )}
 
               {/* Question */}
               <p className="text-lg md:text-xl font-semibold text-gray-800 leading-relaxed text-center mb-10">
-                {question.text}
+                {t.test.questions[contextKey][lang][questionIndex]}
               </p>
 
               {/* Likert stepped slider */}
@@ -145,6 +148,7 @@ export default function TestFlowPage({ answers, setAnswers }) {
                   value={currentValue}
                   onChange={handleAnswer}
                   dimension={question.dimension}
+                  lang={lang}
                 />
               </div>
 
@@ -157,7 +161,7 @@ export default function TestFlowPage({ answers, setAnswers }) {
                     className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-full px-5 py-2.5 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    Back
+                    {T(t.test.back, lang)}
                   </button>
                 ) : (
                   <div />
@@ -176,7 +180,7 @@ export default function TestFlowPage({ answers, setAnswers }) {
                     }
                   `}
                 >
-                  {isLast ? 'See My Results' : 'Next'}
+                  {isLast ? T(t.test.seeMyResults, lang) : T(t.test.next, lang)}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -188,7 +192,7 @@ export default function TestFlowPage({ answers, setAnswers }) {
       {/* Footer */}
       <footer className="py-8 px-8 text-center">
         <p className="text-xs text-gray-400 tracking-wide">
-          Tel-UrMood &middot; Not a clinical diagnosis tool.
+          {T(t.test.notDiagnosis, lang)}
         </p>
       </footer>
     </div>

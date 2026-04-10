@@ -1,6 +1,59 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import { CONTEXTS } from '../../constants/design';
+import { useLang } from '../../contexts/LanguageContext';
+import tr, { T } from '../../constants/translations';
+
+function ContextCard({ ctx, isWide, lang }) {
+  const [expanded, setExpanded] = useState(false);
+  const Icon = ctx.icon;
+
+  return (
+    <div
+      className={`${isWide ? 'md:col-span-2' : ''} bg-white/80 backdrop-blur-sm rounded-3xl shadow-card-md border border-white/60 transition-all duration-300 hover:shadow-card-lg hover:-translate-y-0.5 cursor-pointer`}
+      onClick={() => setExpanded(!expanded)}
+    >
+      <div className={`${isWide ? 'p-8 flex items-start gap-6' : 'p-7'}`}>
+        <div className={`${isWide ? 'w-14 h-14' : 'w-11 h-11 mb-4'} rounded-2xl ${isWide ? 'bg-purple-soft' : 'bg-teal-soft'} flex items-center justify-center shrink-0`}>
+          <Icon className={`${isWide ? 'w-6 h-6' : 'w-5 h-5'} ${isWide ? 'text-purple' : 'text-teal'}`} />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{T(tr.contexts[ctx.key], lang)}</h3>
+            <motion.div
+              animate={{ rotate: expanded ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </motion.div>
+          </div>
+          <p className="text-sm text-gray-500 leading-relaxed">{T(tr.contextDescriptions[ctx.key], lang)}</p>
+
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="overflow-hidden"
+              >
+                <p className="text-sm text-gray-500 leading-relaxed mt-3 pt-3 border-t border-gray-100">
+                  {T(tr.contextsSection.explanations[ctx.key], lang)}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ContextsSection() {
+  const { lang } = useLang();
+
   return (
     <section className="px-8 py-24 relative">
       {/* Subtle background glow */}
@@ -11,79 +64,19 @@ export default function ContextsSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            Four Areas, One Picture
+            {T(tr.contextsSection.title, lang)}
           </h2>
           <p className="text-base text-gray-500 max-w-lg mx-auto">
-            Your mood isn&rsquo;t the same everywhere. Tel-UrMood looks at four parts of
-            your daily life.
+            {T(tr.contextsSection.subtitle, lang)}
           </p>
         </div>
 
-        {/* Bento-style grid — first item spans full width as feature, rest are cards */}
+        {/* Bento-style grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Feature card — Home (wider, horizontal) */}
-          {(() => {
-            const ctx = CONTEXTS[0];
-            const Icon = ctx.icon;
-            return (
-              <div className="md:col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl shadow-card-md border border-white/60 p-8 flex items-start gap-6 transition-all duration-300 hover:shadow-card-lg hover:-translate-y-0.5">
-                <div className="w-14 h-14 rounded-2xl bg-purple-soft flex items-center justify-center shrink-0">
-                  <Icon className="w-6 h-6 text-purple" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{ctx.label}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{ctx.description}</p>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* School — tall-ish standalone */}
-          {(() => {
-            const ctx = CONTEXTS[1];
-            const Icon = ctx.icon;
-            return (
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-card-md border border-white/60 p-7 transition-all duration-300 hover:shadow-card-lg hover:-translate-y-0.5">
-                <div className="w-11 h-11 rounded-2xl bg-teal-soft flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-teal" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{ctx.label}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{ctx.description}</p>
-              </div>
-            );
-          })()}
-
-          {/* Social Activities — standalone */}
-          {(() => {
-            const ctx = CONTEXTS[2];
-            const Icon = ctx.icon;
-            return (
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-card-md border border-white/60 p-7 transition-all duration-300 hover:shadow-card-lg hover:-translate-y-0.5">
-                <div className="w-11 h-11 rounded-2xl bg-teal-soft flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-teal" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{ctx.label}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{ctx.description}</p>
-              </div>
-            );
-          })()}
-
-          {/* Alone — wider horizontal */}
-          {(() => {
-            const ctx = CONTEXTS[3];
-            const Icon = ctx.icon;
-            return (
-              <div className="md:col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl shadow-card-md border border-white/60 p-8 flex items-start gap-6 transition-all duration-300 hover:shadow-card-lg hover:-translate-y-0.5">
-                <div className="w-14 h-14 rounded-2xl bg-purple-soft flex items-center justify-center shrink-0">
-                  <Icon className="w-6 h-6 text-purple" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{ctx.label}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{ctx.description}</p>
-                </div>
-              </div>
-            );
-          })()}
+          <ContextCard ctx={CONTEXTS[0]} isWide lang={lang} />
+          <ContextCard ctx={CONTEXTS[1]} isWide={false} lang={lang} />
+          <ContextCard ctx={CONTEXTS[2]} isWide={false} lang={lang} />
+          <ContextCard ctx={CONTEXTS[3]} isWide lang={lang} />
         </div>
       </div>
     </section>

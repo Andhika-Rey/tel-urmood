@@ -1,21 +1,32 @@
 import { CONTEXTS } from '../../constants/design';
+import { useLang } from '../../contexts/LanguageContext';
+import tr, { T } from '../../constants/translations';
 
 const EXAMPLE_POINTS = [
-  { key: 'home',   x: 0.35,  y: -0.25 },
-  { key: 'school', x: -0.3,  y: 0.4   },
-  { key: 'social', x: 0.4,   y: 0.35  },
-  { key: 'alone',  x: -0.25, y: -0.35 },
+  { key: 'home',   x: 67,  y: 37 },
+  { key: 'school', x: 35,  y: 70 },
+  { key: 'social', x: 70,  y: 67 },
+  { key: 'alone',  x: 37,  y: 32 },
 ];
 
 const CHART_SIZE = 280;
-const HALF = CHART_SIZE / 2;
-const PADDING = 28;
-const PLOT_AREA = HALF - PADDING;
+const PAD = 28;
+const PLOT = CHART_SIZE - PAD * 2;
+const MID = PAD + PLOT / 2;
 
-function toSvgX(comfort) { return HALF + comfort * PLOT_AREA; }
-function toSvgY(energy) { return HALF - energy * PLOT_AREA; }
+function toSvgX(val) { return PAD + (val / 100) * PLOT; }
+function toSvgY(val) { return PAD + PLOT - (val / 100) * PLOT; }
 
 export default function MoodMapPreview() {
+  const { lang } = useLang();
+
+  const quadrantLegend = [
+    { key: 'energeticPleasant', color: 'bg-teal/10 text-teal-dark' },
+    { key: 'energeticUnpleasant', color: 'bg-purple-soft text-purple' },
+    { key: 'calmPleasant', color: 'bg-teal/10 text-teal-dark' },
+    { key: 'lowUnpleasant', color: 'bg-purple-soft text-purple' },
+  ];
+
   return (
     <section className="px-8 py-24 relative">
       <div className="absolute inset-0 -z-10">
@@ -26,25 +37,18 @@ export default function MoodMapPreview() {
         {/* Left — text */}
         <div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            Your Personal Mood Map
+            {T(tr.moodMapPreview.title, lang)}
           </h2>
           <p className="text-base text-gray-500 leading-[1.8] mb-6">
-            After answering, you&rsquo;ll see where each part of your life falls on a
-            comfort-and-energy map. Each dot represents one area — so you can see
-            how your mood shifts across different contexts.
+            {T(tr.moodMapPreview.description, lang)}
           </p>
 
           {/* Quadrant legend */}
           <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: 'Energetic Pleasant', desc: 'Lively & at ease', color: 'bg-teal/10 text-teal-dark' },
-              { label: 'Energetic Unpleasant', desc: 'Restless or on edge', color: 'bg-purple-soft text-purple' },
-              { label: 'Calm Pleasant', desc: 'Calm & comfortable', color: 'bg-teal/10 text-teal-dark' },
-              { label: 'Low Unpleasant', desc: 'Drained or uneasy', color: 'bg-purple-soft text-purple' },
-            ].map(({ label, desc, color }) => (
-              <div key={label} className={`rounded-xl px-3.5 py-2.5 ${color}`}>
-                <div className="text-xs font-semibold mb-0.5">{label}</div>
-                <div className="text-[10px] opacity-70">{desc}</div>
+            {quadrantLegend.map(({ key, color }) => (
+              <div key={key} className={`rounded-xl px-3.5 py-2.5 ${color}`}>
+                <div className="text-xs font-semibold mb-0.5">{T(tr.quadrants[key].label, lang)}</div>
+                <div className="text-[10px] opacity-70">{T(tr.quadrants[key].short, lang)}</div>
               </div>
             ))}
           </div>
@@ -61,28 +65,28 @@ export default function MoodMapPreview() {
             >
               {/* Grid */}
               {Array.from({ length: 7 }, (_, i) => {
-                const pos = PADDING + (i * (CHART_SIZE - 2 * PADDING)) / 6;
+                const pos = PAD + (i * PLOT) / 6;
                 return (
                   <g key={i} opacity="0.07">
-                    <line x1={pos} y1={PADDING} x2={pos} y2={CHART_SIZE - PADDING} stroke="#4f9f96" />
-                    <line x1={PADDING} y1={pos} x2={CHART_SIZE - PADDING} y2={pos} stroke="#4f9f96" />
+                    <line x1={pos} y1={PAD} x2={pos} y2={PAD + PLOT} stroke="#4f9f96" />
+                    <line x1={PAD} y1={pos} x2={PAD + PLOT} y2={pos} stroke="#4f9f96" />
                   </g>
                 );
               })}
 
               {/* Quadrant fills */}
-              <rect x={HALF} y={PADDING} width={HALF - PADDING} height={HALF - PADDING} fill="#4f9f96" opacity="0.04" rx="3" />
-              <rect x={PADDING} y={PADDING} width={HALF - PADDING} height={HALF - PADDING} fill="#813a88" opacity="0.03" rx="3" />
-              <rect x={HALF} y={HALF} width={HALF - PADDING} height={HALF - PADDING} fill="#4f9f96" opacity="0.03" rx="3" />
-              <rect x={PADDING} y={HALF} width={HALF - PADDING} height={HALF - PADDING} fill="#813a88" opacity="0.04" rx="3" />
+              <rect x={MID} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#4f9f96" opacity="0.04" rx="3" />
+              <rect x={PAD} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#813a88" opacity="0.03" rx="3" />
+              <rect x={MID} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#4a90d9" opacity="0.03" rx="3" />
+              <rect x={PAD} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#813a88" opacity="0.04" rx="3" />
 
-              {/* Axes */}
-              <line x1={HALF} y1={PADDING} x2={HALF} y2={CHART_SIZE - PADDING} stroke="#d0d0d0" strokeWidth="0.75" />
-              <line x1={PADDING} y1={HALF} x2={CHART_SIZE - PADDING} y2={HALF} stroke="#d0d0d0" strokeWidth="0.75" />
+              {/* Divider lines at 50 */}
+              <line x1={MID} y1={PAD} x2={MID} y2={PAD + PLOT} stroke="#d0d0d0" strokeWidth="0.75" />
+              <line x1={PAD} y1={MID} x2={PAD + PLOT} y2={MID} stroke="#d0d0d0" strokeWidth="0.75" />
 
               {/* Labels */}
-              <text x={CHART_SIZE - PADDING + 2} y={HALF + 3} fontSize="7" fill="#9ca3af" fontFamily="Montserrat" fontWeight="500">Comfort</text>
-              <text x={HALF + 4} y={PADDING - 6} fontSize="7" fill="#9ca3af" fontFamily="Montserrat" fontWeight="500">Energy</text>
+              <text x={PAD + PLOT / 2} y={CHART_SIZE - 4} fontSize="7" fill="#9ca3af" fontFamily="Montserrat" fontWeight="500" textAnchor="middle">{T(tr.chart.comfort, lang)}</text>
+              <text x={6} y={PAD + PLOT / 2} fontSize="7" fill="#9ca3af" fontFamily="Montserrat" fontWeight="500" textAnchor="middle" transform={`rotate(-90, 6, ${PAD + PLOT / 2})`}>{T(tr.chart.energy, lang)}</text>
 
               {/* Points */}
               {EXAMPLE_POINTS.map(({ key, x, y }) => {
@@ -100,14 +104,14 @@ export default function MoodMapPreview() {
 
             {/* Legend */}
             <div className="flex flex-wrap justify-center gap-4 mt-5">
-              {CONTEXTS.map(({ key, label, chartColor }) => (
+              {CONTEXTS.map(({ key, chartColor }) => (
                 <div key={key} className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: chartColor }} />
-                  <span className="text-[11px] text-gray-500">{label}</span>
+                  <span className="text-[11px] text-gray-500">{T(tr.contexts[key], lang)}</span>
                 </div>
               ))}
             </div>
-            <p className="text-[10px] text-gray-300 text-center mt-3">Example visualization</p>
+            <p className="text-[10px] text-gray-300 text-center mt-3">{T(tr.moodMapPreview.exampleVis, lang)}</p>
           </div>
         </div>
       </div>

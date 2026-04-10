@@ -1,97 +1,118 @@
-const SIZE = 360;
-const HALF = SIZE / 2;
-const PAD = 40; // padding for labels
-const PLOT = HALF - PAD; // usable plot radius
+import t, { T } from '../../constants/translations';
 
-/**
- * Custom SVG mood map chart.
- * Plots 4 context points on a Comfort (X) × Energy (Y) plane.
- * Coordinates are expected in [-1, +1] range.
- */
-export default function MoodMapChart({ results }) {
-  function toX(comfort) {
-    return HALF + comfort * PLOT;
+const SIZE = 400;
+const PAD = 52;          // space for axis labels
+const PLOT = SIZE - PAD * 2;  // drawable area
+const MID = PAD + PLOT / 2;   // 50-line position
+
+// Quadrant fills (x,y are top-left of each quadrant rect in SVG coords)
+const QUADRANT_FILLS = [
+  { x: PAD,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#d94a5c', key: 'energeticUnpleasant' },  // top-left
+  { x: MID,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#4f9f96', key: 'energeticPleasant' },     // top-right
+  { x: PAD,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#813a88', key: 'lowUnpleasant' },          // bottom-left
+  { x: MID,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#4a90d9', key: 'calmPleasant' },           // bottom-right
+];
+
+// Tick values on the 0-100 scale
+const TICKS = [0, 25, 50, 75, 100];
+
+export default function MoodMapChart({ results, lang = 'en' }) {
+  // Convert comfort/energy from [-1,+1] → [0,100]
+  function to100(v) {
+    return (v + 1) * 50;
   }
-  function toY(energy) {
-    return HALF - energy * PLOT; // SVG Y is inverted
+  // Map a 0-100 value to SVG x
+  function toSvgX(val) {
+    return PAD + (val / 100) * PLOT;
+  }
+  // Map a 0-100 value to SVG y (inverted — 0 at bottom)
+  function toSvgY(val) {
+    return PAD + PLOT - (val / 100) * PLOT;
   }
 
   return (
     <div className="w-full flex flex-col items-center">
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className="w-full max-w-[360px] h-auto"
+        className="w-full max-w-[400px] h-auto"
         role="img"
         aria-label="Mood map chart showing your mood across four life contexts"
       >
-        {/* Background quadrant fills */}
-        <rect x={HALF} y={0} width={HALF} height={HALF} rx="0" fill="rgba(79,159,150,0.04)" />
-        <rect x={0} y={0} width={HALF} height={HALF} rx="0" fill="rgba(217,75,92,0.03)" />
-        <rect x={0} y={HALF} width={HALF} height={HALF} rx="0" fill="rgba(129,58,136,0.03)" />
-        <rect x={HALF} y={HALF} width={HALF} height={HALF} rx="0" fill="rgba(74,144,217,0.04)" />
+        <defs>
+          <clipPath id="chart-clip">
+            <rect x={PAD} y={PAD} width={PLOT} height={PLOT} rx="16" />
+          </clipPath>
+        </defs>
 
-        {/* Soft grid lines */}
-        {[-0.5, 0.5].map((v) => (
+        {/* Chart area background */}
+        <rect x={PAD} y={PAD} width={PLOT} height={PLOT} rx="16" fill="#fafbfc" />
+
+        {/* Colored quadrant fills */}
+        <g clipPath="url(#chart-clip)">
+          {QUADRANT_FILLS.map((q, i) => (
+            <rect key={i} x={q.x} y={q.y} width={q.w} height={q.h} fill={q.color} opacity="0.10" />
+          ))}
+        </g>
+
+        {/* Quadrant labels */}
+        {QUADRANT_FILLS.map((q, i) => {
+          const cx = q.x + q.w / 2;
+          const cy = q.y + q.h / 2;
+          const label = T(t.quadrants[q.key]?.label, lang);
+          return (
+            <text key={`ql-${i}`} x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fill={q.color} opacity="0.40" fontSize="9" fontWeight="600" fontFamily="Montserrat, sans-serif">
+              {label}
+            </text>
+          );
+        })}
+
+        {/* Grid lines at 25 and 75 */}
+        {[25, 75].map((v) => (
           <g key={v}>
-            <line
-              x1={toX(v)} y1={PAD - 4} x2={toX(v)} y2={SIZE - PAD + 4}
-              stroke="#e0e0e0" strokeWidth="0.75" strokeDasharray="4 4"
-            />
-            <line
-              x1={PAD - 4} y1={toY(v)} x2={SIZE - PAD + 4} y2={toY(v)}
-              stroke="#e0e0e0" strokeWidth="0.75" strokeDasharray="4 4"
-            />
+            <line x1={toSvgX(v)} y1={PAD} x2={toSvgX(v)} y2={PAD + PLOT} stroke="#e2e5ea" strokeWidth="0.5" strokeDasharray="3 3" />
+            <line x1={PAD} y1={toSvgY(v)} x2={PAD + PLOT} y2={toSvgY(v)} stroke="#e2e5ea" strokeWidth="0.5" strokeDasharray="3 3" />
           </g>
         ))}
 
-        {/* Axes */}
-        <line
-          x1={PAD - 4} y1={HALF} x2={SIZE - PAD + 4} y2={HALF}
-          stroke="#d0d0d0" strokeWidth="1"
-        />
-        <line
-          x1={HALF} y1={PAD - 4} x2={HALF} y2={SIZE - PAD + 4}
-          stroke="#d0d0d0" strokeWidth="1"
-        />
+        {/* Divider lines at 50 (the quadrant borders) */}
+        <line x1={MID} y1={PAD} x2={MID} y2={PAD + PLOT} stroke="#c8cdd4" strokeWidth="1" />
+        <line x1={PAD} y1={MID} x2={PAD + PLOT} y2={MID} stroke="#c8cdd4" strokeWidth="1" />
 
-        {/* Quadrant labels */}
-        <text x={HALF + PLOT / 2} y={PAD + 16} textAnchor="middle" className="fill-gray-400 text-[8px]" fontFamily="Montserrat, sans-serif">
-          Energetic Pleasant
-        </text>
-        <text x={HALF - PLOT / 2} y={PAD + 16} textAnchor="middle" className="fill-gray-400 text-[8px]" fontFamily="Montserrat, sans-serif">
-          Energetic Unpleasant
-        </text>
-        <text x={HALF + PLOT / 2} y={SIZE - PAD - 8} textAnchor="middle" className="fill-gray-400 text-[8px]" fontFamily="Montserrat, sans-serif">
-          Calm Pleasant
-        </text>
-        <text x={HALF - PLOT / 2} y={SIZE - PAD - 8} textAnchor="middle" className="fill-gray-400 text-[8px]" fontFamily="Montserrat, sans-serif">
-          Low Unpleasant
-        </text>
+        {/* Chart border */}
+        <rect x={PAD} y={PAD} width={PLOT} height={PLOT} rx="16" fill="none" stroke="#e2e5ea" strokeWidth="1" />
 
-        {/* Axis labels */}
-        <text x={SIZE - PAD + 8} y={HALF + 4} textAnchor="start" className="fill-gray-500 text-[9px] font-medium" fontFamily="Montserrat, sans-serif">
-          Comfort +
+        {/* X-axis tick labels */}
+        {TICKS.map((v) => (
+          <text key={`xt-${v}`} x={toSvgX(v)} y={PAD + PLOT + 16} textAnchor="middle" fill="#9ca3af" fontSize="9" fontFamily="Montserrat, sans-serif">
+            {v}
+          </text>
+        ))}
+
+        {/* Y-axis tick labels */}
+        {TICKS.map((v) => (
+          <text key={`yt-${v}`} x={PAD - 8} y={toSvgY(v) + 3} textAnchor="end" fill="#9ca3af" fontSize="9" fontFamily="Montserrat, sans-serif">
+            {v}
+          </text>
+        ))}
+
+        {/* Axis titles */}
+        <text x={PAD + PLOT / 2} y={SIZE - 4} textAnchor="middle" fill="#6b7280" fontSize="10" fontWeight="600" fontFamily="Montserrat, sans-serif">
+          {T(t.chart.comfort, lang)}
         </text>
-        <text x={PAD - 8} y={HALF + 4} textAnchor="end" className="fill-gray-400 text-[9px]" fontFamily="Montserrat, sans-serif">
-          −
-        </text>
-        <text x={HALF} y={PAD - 10} textAnchor="middle" className="fill-gray-500 text-[9px] font-medium" fontFamily="Montserrat, sans-serif">
-          Energy +
-        </text>
-        <text x={HALF} y={SIZE - PAD + 18} textAnchor="middle" className="fill-gray-400 text-[9px]" fontFamily="Montserrat, sans-serif">
-          −
+        <text x={12} y={PAD + PLOT / 2} textAnchor="middle" fill="#6b7280" fontSize="10" fontWeight="600" fontFamily="Montserrat, sans-serif" transform={`rotate(-90, 12, ${PAD + PLOT / 2})`}>
+          {T(t.chart.energy, lang)}
         </text>
 
-        {/* Data points */}
+        {/* Data points — diamond shape like reference */}
         {results.map((r) => {
-          const cx = toX(r.comfort);
-          const cy = toY(r.energy);
+          const cx = toSvgX(to100(r.comfort));
+          const cy = toSvgY(to100(r.energy));
+          const s = 8;
+          const diamond = `M${cx},${cy - s} L${cx + s},${cy} L${cx},${cy + s} L${cx - s},${cy} Z`;
           return (
             <g key={r.key}>
-              {/* Glow */}
-              <circle cx={cx} cy={cy} r="16" fill={r.chartColor} opacity="0.12" />
-              {/* Dot */}
-              <circle cx={cx} cy={cy} r="7" fill={r.chartColor} stroke="white" strokeWidth="2.5" />
+              <circle cx={cx} cy={cy} r="16" fill={r.chartColor} opacity="0.10" />
+              <path d={diamond} fill={r.chartColor} stroke="white" strokeWidth="2" />
             </g>
           );
         })}
@@ -102,10 +123,10 @@ export default function MoodMapChart({ results }) {
         {results.map((r) => (
           <div key={r.key} className="flex items-center gap-1.5">
             <span
-              className="w-2.5 h-2.5 rounded-full inline-block"
+              className="w-2.5 h-2.5 rounded-sm inline-block rotate-45"
               style={{ backgroundColor: r.chartColor }}
             />
-            <span className="text-xs text-gray-500">{r.label}</span>
+            <span className="text-xs text-gray-500">{T(t.contexts[r.key], lang)}</span>
           </div>
         ))}
       </div>

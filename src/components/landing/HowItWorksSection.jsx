@@ -1,9 +1,13 @@
 import { ClipboardList, Map, Lightbulb, ChevronRight } from 'lucide-react';
-import { STEPS } from '../../constants/design';
+import { useLang } from '../../contexts/LanguageContext';
+import tr, { T } from '../../constants/translations';
 
 const STEP_ICONS = [ClipboardList, Map, Lightbulb];
 
 export default function HowItWorksSection() {
+  const { lang } = useLang();
+  const steps = tr.howItWorks.steps;
+
   return (
     <section id="how-it-works" className="px-8 py-28 relative">
       {/* Background glow */}
@@ -14,10 +18,10 @@ export default function HowItWorksSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            How It Works
+            {T(tr.howItWorks.title, lang)}
           </h2>
           <p className="text-base text-gray-500">
-            Three simple steps. About 5 minutes. Zero complexity.
+            {T(tr.howItWorks.subtitle, lang)}
           </p>
         </div>
 
@@ -25,11 +29,11 @@ export default function HowItWorksSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left — numbered steps with connector line */}
           <div className="space-y-0">
-            {STEPS.map(({ label, description }, i) => {
+            {steps.map((step, i) => {
               const Icon = STEP_ICONS[i];
-              const isLast = i === STEPS.length - 1;
+              const isLast = i === steps.length - 1;
               return (
-                <div key={label} className="flex gap-5">
+                <div key={i} className="flex gap-5">
                   {/* Timeline */}
                   <div className="flex flex-col items-center">
                     <div className="w-11 h-11 rounded-2xl bg-teal-soft flex items-center justify-center shrink-0 relative z-10">
@@ -41,9 +45,9 @@ export default function HowItWorksSection() {
                   </div>
                   {/* Content */}
                   <div className={isLast ? 'pb-0' : 'pb-8'}>
-                    <div className="text-xs font-semibold text-teal mb-1">Step {i + 1}</div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-1.5">{label}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{description}</p>
+                    <div className="text-xs font-semibold text-teal mb-1">{T(tr.howItWorks.step, lang)} {i + 1}</div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-1.5">{T(step.label, lang)}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{T(step.description, lang)}</p>
                   </div>
                 </div>
               );
@@ -55,19 +59,19 @@ export default function HowItWorksSection() {
             <div className="bg-white/80 backdrop-blur-sm rounded-[28px] shadow-card-lg border border-white/60 p-7 md:p-8">
               {/* Mock progress bar */}
               <div className="flex items-center gap-2 mb-6">
-                {['Home', 'School', 'Social', 'Alone'].map((label, i) => (
-                  <div key={label} className="flex-1">
+                {['home', 'school', 'social', 'alone'].map((key, i) => (
+                  <div key={key} className="flex-1">
                     <div className={`h-1.5 rounded-full ${i === 0 ? 'bg-teal' : 'bg-gray-100'}`} />
-                    <p className="text-[10px] text-gray-400 mt-1.5 text-center">{label}</p>
+                    <p className="text-[10px] text-gray-400 mt-1.5 text-center">{T(tr.contexts[key], lang)}</p>
                   </div>
                 ))}
               </div>
 
               {/* Mock question card */}
               <div className="bg-mint-pale/60 rounded-2xl p-5 mb-4">
-                <p className="text-xs text-gray-400 mb-2">1 of 4</p>
+                <p className="text-xs text-gray-400 mb-2">1 {T(tr.howItWorks.mockOf, lang)} 4</p>
                 <p className="text-sm text-gray-700 font-medium leading-relaxed mb-4">
-                  I feel comfortable and at ease when I&rsquo;m at home.
+                  {T(tr.howItWorks.mockQuestion, lang)}
                 </p>
                 {/* Mock Likert */}
                 <div className="flex gap-2">
@@ -86,7 +90,7 @@ export default function HowItWorksSection() {
               {/* Mock nav */}
               <div className="flex items-center justify-end">
                 <div className="flex items-center gap-1.5 text-xs font-medium text-purple">
-                  Next <ChevronRight className="w-3.5 h-3.5" />
+                  {T(tr.test.next, lang)} <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </div>
             </div>

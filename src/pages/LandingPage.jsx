@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import TransitionOverlay from '../components/TransitionOverlay';
+import ScrollReveal from '../components/ScrollReveal';
 import HeroSection from '../components/landing/HeroSection';
 import WhatIsSection from '../components/landing/WhatIsSection';
 import ContextsSection from '../components/landing/ContextsSection';
@@ -46,12 +47,24 @@ export default function LandingPage() {
       <Navbar onStartTest={handleStartTest} />
 
       <main className="flex-1">
-        <HeroSection onStartTest={handleStartTest} />
-        <WhatIsSection />
-        <ContextsSection />
-        <HowItWorksSection />
-        <MoodMapPreview />
-        <FinalCTASection onStartTest={handleStartTest} />
+        <ScrollReveal>
+          <HeroSection onStartTest={handleStartTest} />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <WhatIsSection />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <ContextsSection />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <HowItWorksSection />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <MoodMapPreview />
+        </ScrollReveal>
+        <ScrollReveal delay={0.05}>
+          <FinalCTASection onStartTest={handleStartTest} />
+        </ScrollReveal>
       </main>
 
       <Footer />

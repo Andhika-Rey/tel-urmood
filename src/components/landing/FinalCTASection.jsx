@@ -1,6 +1,10 @@
 import { ArrowRight } from 'lucide-react';
+import { useLang } from '../../contexts/LanguageContext';
+import tr, { T } from '../../constants/translations';
 
 export default function FinalCTASection({ onStartTest }) {
+  const { lang } = useLang();
+
   return (
     <section className="px-8 py-28 relative">
       {/* Ambient glow */}
@@ -12,21 +16,21 @@ export default function FinalCTASection({ onStartTest }) {
       <div className="max-w-3xl mx-auto">
         <div className="bg-white/70 backdrop-blur-sm rounded-[32px] shadow-card-lg border border-white/60 p-10 md:p-14 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            Ready to Check In With Yourself?
+            {T(tr.finalCta.title, lang)}
           </h2>
           <p className="text-base text-gray-500 mb-10 max-w-md mx-auto leading-relaxed">
-            It only takes a few minutes. No sign-up, no saving, no judgment.
+            {T(tr.finalCta.subtitle, lang)}
           </p>
           <button
             type="button"
             onClick={onStartTest}
             className="inline-flex items-center gap-2 bg-purple hover:bg-purple-light active:bg-purple-dark text-white rounded-full px-10 py-4 text-sm font-semibold shadow-card-md hover:shadow-card-lg transition-all duration-200 cursor-pointer"
           >
-            Start Reflecting
+            {T(tr.finalCta.cta, lang)}
             <ArrowRight className="w-4 h-4" />
           </button>
           <p className="text-xs text-gray-400 mt-6">
-            No account needed &middot; Results stay on your device
+            {T(tr.finalCta.note, lang)}
           </p>
         </div>
       </div>
