@@ -4,8 +4,8 @@ import t from '../../constants/translations';
 const POINT_COUNT = 5;
 const CENTER = 2; // index of neutral point
 
-export default function LikertScale({ value, onChange, dimension, lang = 'en' }) {
-  const labels = t.scaleLabels[dimension]?.[lang] || t.scaleLabels.comfort[lang] || t.scaleLabels.comfort.en;
+export default function LikertScale({ value, onChange, lang = 'en' }) {
+  const labels = t.scaleLabels[lang] || t.scaleLabels.en;
 
   // Compute the fill bar from center to the selected point
   const centerPct = (CENTER / (POINT_COUNT - 1)) * 100; // 50%

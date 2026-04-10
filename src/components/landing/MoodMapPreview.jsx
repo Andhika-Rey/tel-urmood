@@ -21,10 +21,10 @@ export default function MoodMapPreview() {
   const { lang } = useLang();
 
   const quadrantLegend = [
-    { key: 'energeticPleasant', color: 'bg-teal/10 text-teal-dark' },
-    { key: 'energeticUnpleasant', color: 'bg-purple-soft text-purple' },
-    { key: 'calmPleasant', color: 'bg-teal/10 text-teal-dark' },
-    { key: 'lowUnpleasant', color: 'bg-purple-soft text-purple' },
+    { key: 'energeticPleasant', color: 'bg-red-50 text-red-700' },
+    { key: 'energeticUnpleasant', color: 'bg-purple-50 text-purple-700' },
+    { key: 'calmPleasant', color: 'bg-blue-50 text-blue-700' },
+    { key: 'lowUnpleasant', color: 'bg-green-50 text-green-700' },
   ];
 
   return (
@@ -75,10 +75,10 @@ export default function MoodMapPreview() {
               })}
 
               {/* Quadrant fills */}
-              <rect x={MID} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#4f9f96" opacity="0.04" rx="3" />
-              <rect x={PAD} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#813a88" opacity="0.03" rx="3" />
-              <rect x={MID} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#4a90d9" opacity="0.03" rx="3" />
-              <rect x={PAD} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#813a88" opacity="0.04" rx="3" />
+              <rect x={MID} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#f87171" opacity="0.12" rx="3" />
+              <rect x={PAD} y={PAD} width={PLOT / 2} height={PLOT / 2} fill="#a78bfa" opacity="0.12" rx="3" />
+              <rect x={MID} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#60a5fa" opacity="0.12" rx="3" />
+              <rect x={PAD} y={MID} width={PLOT / 2} height={PLOT / 2} fill="#4ade80" opacity="0.12" rx="3" />
 
               {/* Divider lines at 50 */}
               <line x1={MID} y1={PAD} x2={MID} y2={PAD + PLOT} stroke="#d0d0d0" strokeWidth="0.75" />

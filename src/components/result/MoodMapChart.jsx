@@ -7,10 +7,10 @@ const MID = PAD + PLOT / 2;   // 50-line position
 
 // Quadrant fills (x,y are top-left of each quadrant rect in SVG coords)
 const QUADRANT_FILLS = [
-  { x: PAD,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#d94a5c', key: 'energeticUnpleasant' },  // top-left
-  { x: MID,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#4f9f96', key: 'energeticPleasant' },     // top-right
-  { x: PAD,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#813a88', key: 'lowUnpleasant' },          // bottom-left
-  { x: MID,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#4a90d9', key: 'calmPleasant' },           // bottom-right
+  { x: PAD,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#a78bfa', key: 'energeticUnpleasant' },  // top-left  = purple
+  { x: MID,  y: PAD,  w: PLOT / 2, h: PLOT / 2, color: '#f87171', key: 'energeticPleasant' },     // top-right = red
+  { x: PAD,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#4ade80', key: 'lowUnpleasant' },          // bottom-left = green
+  { x: MID,  y: MID,  w: PLOT / 2, h: PLOT / 2, color: '#60a5fa', key: 'calmPleasant' },           // bottom-right = blue
 ];
 
 // Tick values on the 0-100 scale
@@ -50,7 +50,7 @@ export default function MoodMapChart({ results, lang = 'en' }) {
         {/* Colored quadrant fills */}
         <g clipPath="url(#chart-clip)">
           {QUADRANT_FILLS.map((q, i) => (
-            <rect key={i} x={q.x} y={q.y} width={q.w} height={q.h} fill={q.color} opacity="0.10" />
+            <rect key={i} x={q.x} y={q.y} width={q.w} height={q.h} fill={q.color} opacity="0.22" />
           ))}
         </g>
 
@@ -60,7 +60,7 @@ export default function MoodMapChart({ results, lang = 'en' }) {
           const cy = q.y + q.h / 2;
           const label = T(t.quadrants[q.key]?.label, lang);
           return (
-            <text key={`ql-${i}`} x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fill={q.color} opacity="0.40" fontSize="9" fontWeight="600" fontFamily="Montserrat, sans-serif">
+            <text key={`ql-${i}`} x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fill={q.color} opacity="0.55" fontSize="9" fontWeight="600" fontFamily="Montserrat, sans-serif">
               {label}
             </text>
           );

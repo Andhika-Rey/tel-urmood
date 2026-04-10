@@ -53,47 +53,54 @@ export const CONTEXT_INSTRUCTIONS = {
 
 export const QUESTIONS = {
   home: [
-    { text: 'I feel comfortable and at ease when I\'m at home.', dimension: 'comfort' },
-    { text: 'I feel energized and active in my home environment.', dimension: 'energy' },
-    { text: 'I feel safe and relaxed at home.', dimension: 'comfort' },
-    { text: 'I feel motivated to do things when I\'m at home.', dimension: 'energy' },
+    { dimension: 'comfort', polarity: 1 },   // 1 – Valence (+)
+    { dimension: 'comfort', polarity: 1 },   // 2 – Valence (+)
+    { dimension: 'comfort', polarity: -1 },  // 3 – Valence (−)
+    { dimension: 'comfort', polarity: -1 },  // 4 – Valence (−)
+    { dimension: 'energy',  polarity: 1 },   // 5 – Arousal (+)
+    { dimension: 'energy',  polarity: 1 },   // 6 – Arousal (+)
+    { dimension: 'energy',  polarity: -1 },  // 7 – Arousal (−)
+    { dimension: 'energy',  polarity: -1 },  // 8 – Arousal (−)
   ],
   school: [
-    { text: 'I feel comfortable and accepted at school.', dimension: 'comfort' },
-    { text: 'I feel energized and engaged during school.', dimension: 'energy' },
-    { text: 'I feel calm and steady when I\'m at school.', dimension: 'comfort' },
-    { text: 'I feel enthusiastic about things happening at school.', dimension: 'energy' },
+    { dimension: 'comfort', polarity: 1 },   // 9
+    { dimension: 'comfort', polarity: 1 },   // 10
+    { dimension: 'comfort', polarity: -1 },  // 11
+    { dimension: 'comfort', polarity: -1 },  // 12
+    { dimension: 'energy',  polarity: 1 },   // 13
+    { dimension: 'energy',  polarity: 1 },   // 14
+    { dimension: 'energy',  polarity: -1 },  // 15
+    { dimension: 'energy',  polarity: -1 },  // 16
   ],
   social: [
-    { text: 'I feel comfortable when I\'m around other people.', dimension: 'comfort' },
-    { text: 'I feel energized by social interactions.', dimension: 'energy' },
-    { text: 'I feel relaxed and at ease in social settings.', dimension: 'comfort' },
-    { text: 'I feel lively and active when I\'m with friends.', dimension: 'energy' },
+    { dimension: 'comfort', polarity: 1 },   // 17
+    { dimension: 'comfort', polarity: 1 },   // 18
+    { dimension: 'comfort', polarity: -1 },  // 19
+    { dimension: 'comfort', polarity: -1 },  // 20
+    { dimension: 'energy',  polarity: 1 },   // 21
+    { dimension: 'energy',  polarity: 1 },   // 22
+    { dimension: 'energy',  polarity: -1 },  // 23
+    { dimension: 'energy',  polarity: -1 },  // 24
   ],
   alone: [
-    { text: 'I feel comfortable when I\'m by myself.', dimension: 'comfort' },
-    { text: 'I feel energized during my alone time.', dimension: 'energy' },
-    { text: 'I feel peaceful and calm when I\'m alone.', dimension: 'comfort' },
-    { text: 'I feel motivated to do things on my own.', dimension: 'energy' },
+    { dimension: 'comfort', polarity: 1 },   // 25
+    { dimension: 'comfort', polarity: 1 },   // 26
+    { dimension: 'comfort', polarity: -1 },  // 27
+    { dimension: 'comfort', polarity: -1 },  // 28
+    { dimension: 'energy',  polarity: 1 },   // 29
+    { dimension: 'energy',  polarity: 1 },   // 30
+    { dimension: 'energy',  polarity: -1 },  // 31
+    { dimension: 'energy',  polarity: -1 },  // 32
   ],
 };
 
-export const SCALE_LABELS = {
-  comfort: [
-    'Very Uncomfortable',
-    'Uncomfortable',
-    'Neutral',
-    'Comfortable',
-    'Very Comfortable',
-  ],
-  energy: [
-    'Very Drained',
-    'Drained',
-    'Neutral',
-    'Energized',
-    'Very Energized',
-  ],
-};
+export const SCALE_LABELS = [
+  'Strongly Disagree',
+  'Disagree',
+  'Neutral',
+  'Agree',
+  'Strongly Agree',
+];
 
 export const LIKERT_LABELS = [
   'Strongly Disagree',
@@ -105,9 +112,9 @@ export const LIKERT_LABELS = [
 
 export function createEmptyAnswers() {
   return {
-    home: [null, null, null, null],
-    school: [null, null, null, null],
-    social: [null, null, null, null],
-    alone: [null, null, null, null],
+    home: [null, null, null, null, null, null, null, null],
+    school: [null, null, null, null, null, null, null, null],
+    social: [null, null, null, null, null, null, null, null],
+    alone: [null, null, null, null, null, null, null, null],
   };
 }

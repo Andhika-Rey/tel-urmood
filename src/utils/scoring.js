@@ -1,29 +1,22 @@
-import { CONTEXTS, QUADRANTS } from '../constants/design';
+import { CONTEXTS, QUESTIONS, QUADRANTS } from '../constants/design';
 
 /**
  * Scoring logic for Tel-UrMood.
  *
- * Each context has 4 questions (indices 0-3):
- *   Q0, Q2 → Comfort axis (X)
- *   Q1, Q3 → Energy axis  (Y)
+ * Each context has 8 questions. Each question has:
+ *   dimension: 'comfort' | 'energy'
+ *   polarity:  1 (positive) | -1 (negative / reverse-scored)
  *
  * Likert values are 0-4 (Strongly Disagree → Strongly Agree).
- * Each value is normalised to [-1, +1]:  (value - 2) / 2
- * The two normalised values per axis are averaged to produce one coordinate.
+ * Positive items:  (value - 2) / 2   → 0→-1, 2→0, 4→+1
+ * Negative items:  (2 - value) / 2   → 0→+1, 2→0, 4→-1  (reversed)
  *
+ * The 4 values per dimension are averaged to produce one coordinate.
  * Quadrant is determined by the sign of each coordinate.
  */
 
-const COMFORT_INDICES = [0, 2];
-const ENERGY_INDICES = [1, 3];
-
-function likertToCoord(value) {
-  return (value - 2) / 2; // 0→-1, 1→-0.5, 2→0, 3→0.5, 4→1
-}
-
-function averageCoords(answerArray, indices) {
-  const values = indices.map((i) => likertToCoord(answerArray[i]));
-  return values.reduce((sum, v) => sum + v, 0) / values.length;
+function likertToCoord(value, polarity) {
+  return polarity === 1 ? (value - 2) / 2 : (2 - value) / 2;
 }
 
 function getQuadrantKey(comfort, energy) {
@@ -40,8 +33,18 @@ function getQuadrantKey(comfort, energy) {
 export function computeResults(answers) {
   return CONTEXTS.map((ctx) => {
     const a = answers[ctx.key];
-    const comfort = averageCoords(a, COMFORT_INDICES);
-    const energy = averageCoords(a, ENERGY_INDICES);
+    const items = QUESTIONS[ctx.key];
+    const comfortVals = [];
+    const energyVals = [];
+
+    items.forEach((item, i) => {
+      const coord = likertToCoord(a[i], item.polarity);
+      if (item.dimension === 'comfort') comfortVals.push(coord);
+      else energyVals.push(coord);
+    });
+
+    const comfort = comfortVals.reduce((s, v) => s + v, 0) / comfortVals.length;
+    const energy = energyVals.reduce((s, v) => s + v, 0) / energyVals.length;
     const quadrantKey = getQuadrantKey(comfort, energy);
 
     return {

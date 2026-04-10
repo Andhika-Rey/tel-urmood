@@ -26,7 +26,9 @@ export default function HeroSection({ onStartTest }) {
         <div className="max-w-lg">
           {/* Logo + Headline block */}
           <div className="mb-6">
-            <img src="/logo-.PNG" alt="Tel-UrMood" className="h-auto w-[220px] md:w-[320px]" />
+            <div className="mb-4">
+              <img src="/logo-.PNG" alt="Tel-UrMood" className="h-auto w-[280px] md:w-[360px]" />
+            </div>
             <h1 className="text-4xl md:text-[3.25rem] font-bold text-gray-900 leading-[1.12] tracking-tight">
               {T(tr.hero.headline, lang)}{' '}
               <span className="text-purple">{T(tr.hero.headlineAccent, lang)}</span>

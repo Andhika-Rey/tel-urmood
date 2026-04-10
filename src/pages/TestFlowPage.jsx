@@ -8,8 +8,8 @@ import t, { T } from '../constants/translations';
 import ProgressBar from '../components/test/ProgressBar';
 import LikertScale from '../components/test/LikertScale';
 
-const TOTAL = 16;
-const PER_CONTEXT = 4;
+const TOTAL = 32;
+const PER_CONTEXT = 8;
 
 const variants = {
   enter: (dir) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -17,10 +17,12 @@ const variants = {
   exit: (dir) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
 };
 
-export default function TestFlowPage({ answers, setAnswers }) {
+export default function TestFlowPage({ answers, setAnswers, userName, setUserName }) {
   const navigate = useNavigate();
   const { lang } = useLang();
   const [step, setStep] = useState(0);
+  const [showNameInput, setShowNameInput] = useState(true);
+  const [nameValue, setNameValue] = useState('');
   const dirRef = useRef(1);
 
   const contextIndex = Math.floor(step / PER_CONTEXT);
@@ -87,6 +89,50 @@ export default function TestFlowPage({ answers, setAnswers }) {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center px-6 py-10 md:py-14">
+        {showNameInput ? (
+          /* ── Name input gate ── */
+          <div className="w-full max-w-xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="w-full bg-white/80 backdrop-blur-sm rounded-[32px] shadow-card-lg border border-white/60 p-8 md:p-12 text-center"
+            >
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                {T(t.test.nameInput.title, lang)}
+              </h2>
+              <p className="text-sm text-gray-500 mb-8">
+                {T(t.test.nameInput.subtitle, lang)}
+              </p>
+              <input
+                type="text"
+                value={nameValue}
+                onChange={(e) => setNameValue(e.target.value)}
+                placeholder={T(t.test.nameInput.placeholder, lang)}
+                maxLength={50}
+                className="w-full max-w-xs mx-auto block rounded-2xl border border-gray-200 bg-white px-5 py-3 text-center text-base text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple/40 focus:border-purple/40 transition-all mb-8"
+              />
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => { setUserName(''); setShowNameInput(false); }}
+                  className="text-sm font-medium text-gray-400 hover:text-gray-600 rounded-full px-6 py-2.5 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                >
+                  {T(t.test.nameInput.skip, lang)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setUserName(nameValue.trim()); setShowNameInput(false); }}
+                  className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold bg-purple hover:bg-purple-light active:bg-purple-dark text-white shadow-card-md hover:shadow-card-lg transition-all duration-200 cursor-pointer"
+                >
+                  {T(t.test.nameInput.continue, lang)}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        ) : (
+        <>
         {/* Progress bar */}
         <div className="w-full max-w-xl mb-8">
           <ProgressBar currentStep={step} />
@@ -147,7 +193,6 @@ export default function TestFlowPage({ answers, setAnswers }) {
                 <LikertScale
                   value={currentValue}
                   onChange={handleAnswer}
-                  dimension={question.dimension}
                   lang={lang}
                 />
               </div>
@@ -187,6 +232,8 @@ export default function TestFlowPage({ answers, setAnswers }) {
             </motion.div>
           </AnimatePresence>
         </div>
+        </>
+        )}
       </main>
 
       {/* Footer */}

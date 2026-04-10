@@ -3,8 +3,8 @@ import { CONTEXTS } from '../../constants/design';
 import { useLang } from '../../contexts/LanguageContext';
 import t, { T } from '../../constants/translations';
 
-const TOTAL_QUESTIONS = 16;
-const PER_CONTEXT = 4;
+const TOTAL_QUESTIONS = 32;
+const PER_CONTEXT = 8;
 
 export default function ProgressBar({ currentStep }) {
   const { lang } = useLang();
